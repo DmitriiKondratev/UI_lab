@@ -167,7 +167,7 @@ static bool vecEquals(IVector* pOperand1, IVector* pOperand2) {
 
 static bool vecNotEquals(IVector* pOperand1, IVector* pOperand2) {
     bool res = true;
-    auto eq = IVector::equals(pOperand1, pOperand2, IVector::NORM::NORM_INF, TOLERANCE, &res, pLogger);
+    auto eq = IVector::equals(pOperand1, pOperand2, IVector::NORM::NORM_INF, TOLERANCE, &res, nullptr);
 
     return (eq == RESULT_CODE::SUCCESS) && !res;
 }
@@ -176,7 +176,6 @@ void testEquals(IVector* v1, IVector* v2, IVector* otherVec) {
     assert(v1 && v2 && otherVec);
 
     test("Equals vectors", vecEquals, v1, v2);
-    test("Equals vector and null", vecEquals, v1, static_cast<IVector*>(nullptr));
     test("Unequals vectors", vecNotEquals, v1, otherVec);
 }
 
@@ -202,17 +201,17 @@ int main() {
         auto v3 = v1->clone();
         if (v3) {
             test("Clone", checkVector, v3, coords1);
-            // testEquals(v1, v3, v2);
+            testEquals(v1, v3, v2);
 
-            // delete v3;
+            delete v3;
         }
     }
 
     std::cout << endl << (allPassed ? "ALL TESTS PASSED" : "TESTS FAILED") << endl;
 
-//    if (v1) { delete v1; }
-//    if (v2) { delete v2; }
-//    if (vec3dim) { delete vec3dim; }
+    if (v1) { delete v1; }
+    if (v2) { delete v2; }
+    if (vec3dim) { delete vec3dim; }
 
     pLogger->destroyLogger(CLIENT(CLIENT_KEY));
 

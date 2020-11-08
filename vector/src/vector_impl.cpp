@@ -23,7 +23,7 @@ namespace {
 
         ~VectorImpl() override {
             auto ptr = reinterpret_cast<char*>(pData) - sizeof(VectorImpl);
-            operator delete[](ptr);
+            operator delete[] (pData, ptr);
         }
 
         IVector* clone() const override {
