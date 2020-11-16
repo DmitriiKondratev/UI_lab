@@ -2,7 +2,6 @@
 #define ILOGGER_H
 
 #include "library_global.h"
-
 #include "RC.h"
 
 class LIBRARY_IMPORT ILogger {

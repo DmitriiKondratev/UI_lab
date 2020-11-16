@@ -1,10 +1,10 @@
 #ifndef IVECTOR_H
 #define IVECTOR_H
 
-#include<stddef.h>
-#include "ILogger.h"
+#include <stddef.h>
 
 #include "library_global.h"
+#include "ILogger.h"
 
 class LIBRARY_EXPORT IVector {
 public:

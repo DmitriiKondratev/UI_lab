@@ -1,9 +1,9 @@
 #ifndef IVECTOR_H
 #define IVECTOR_H
 
-#include "library_global.h"
+#include <stddef.h>
 
-#include<stddef.h>
+#include "library_global.h"
 #include "ILogger.h"
 
 class LIBRARY_IMPORT IVector {

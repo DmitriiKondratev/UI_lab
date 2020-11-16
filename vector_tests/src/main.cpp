@@ -3,9 +3,9 @@
 #include <array>
 #include <cassert>
 
-#include "ILogger.h"
-#include "IVector.h"
-#include "test.h"
+#include "include/ILogger.h"
+#include "include/IVector.h"
+#include "include/test.h"
 
 #define CLIENT(n) ((void*) n)
 #define CLIENT_KEY 47
@@ -115,7 +115,7 @@ static void testMul(IVector* v, ILogger* pLogger) {
 
     auto
             goodMul = IVector::mul(v, scaleParam, pLogger),
-            badMul_nan = IVector::mul(v, nan(nullptr), nullptr),
+            badMul_nan = IVector::mul(v, NAN, nullptr),
             badMul_nullptr = IVector::mul(nullptr, scaleParam, nullptr);
 
     if (goodMul) {

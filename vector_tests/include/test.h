@@ -32,4 +32,4 @@ void print(FILE* stream, T* collection) {
     fprintf(stream, "]\n");
 }
 
-#endif /* TEST_H */
+#endif // TEST_H

@@ -1,10 +1,9 @@
-#include <cassert>
 #include <memory>
 #include <new>
 #include <cmath>
 #include <limits>
 
-#include "IVector.h"
+#include "include/IVector.h"
 
 namespace {
     class VectorImpl: public IVector {
