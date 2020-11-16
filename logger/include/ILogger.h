@@ -1,8 +1,8 @@
 #ifndef ILOGGER_H
 #define ILOGGER_H
 
-#include "RC.h"
 #include "library_global.h"
+#include "RC.h"
 
 class LIBRARY_EXPORT ILogger {
 public:
