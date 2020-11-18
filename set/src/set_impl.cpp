@@ -45,7 +45,7 @@ namespace {
 
             IVector *diff;
             for (auto elem: elements) {
-                diff = IVector::add(pVector, elem, pLogger);
+                diff = IVector::sub(pVector, elem, pLogger);
 
                 if (diff == nullptr) {
                     if (pLogger != nullptr) {
