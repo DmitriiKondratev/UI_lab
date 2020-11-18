@@ -3,9 +3,9 @@
 #include <array>
 #include <cassert>
 
+#include "include/test.h"
 #include "include/ILogger.h"
 #include "include/IVector.h"
-#include "include/test.h"
 
 #define CLIENT(n) ((void*) n)
 #define CLIENT_KEY 47
@@ -31,7 +31,7 @@ double
 ILogger *pLogger = ILogger::createLogger(CLIENT(CLIENT_KEY));
 
 static void printHead(IVector* v1, IVector* v2) {
-    cout << "Tests for vector library" << endl;
+    cout << "Tests for vector library:" << endl;
 
     if (v1 && v2) {
         cout << "v1 = ";
