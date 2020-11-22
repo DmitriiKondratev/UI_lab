@@ -224,7 +224,6 @@ int main() {
         }
     }
 
-    print(nullptr, v_nan);
     test("Creation with nan data", isBad<IVector>, v_nan);
 
     std::cout << endl << (allPassed ? "ALL TESTS PASSED" : "TESTS FAILED") << endl;
