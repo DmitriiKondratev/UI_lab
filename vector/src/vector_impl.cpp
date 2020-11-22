@@ -39,14 +39,14 @@ namespace {
         RESULT_CODE setCoord(size_t index, double value) override {
             if (index >= dim) {
                 if (pLogger != nullptr) {
-                    pLogger->log("VectorImpl::setCoord: wrong index", RESULT_CODE::WRONG_DIM);
+                    pLogger->log("in VectorImpl::setCoord: wrong index", RESULT_CODE::WRONG_DIM);
                 }
                 return RESULT_CODE::WRONG_DIM;
             }
 
             if (std::isnan(value)) {
                 if (pLogger != nullptr) {
-                    pLogger->log("VectorImpl::setCoord: value is not a number", RESULT_CODE::NAN_VALUE);
+                    pLogger->log("in VectorImpl::setCoord: value is not a number", RESULT_CODE::NAN_VALUE);
                 }
                 return RESULT_CODE::NAN_VALUE;
             }
@@ -92,16 +92,25 @@ IVector::~IVector() {}
 IVector* IVector::createVector(size_t dim, double* pData, ILogger* pLogger) {
     if (dim == 0) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::createVector: 0 dimension", RESULT_CODE::WRONG_DIM);
+            pLogger->log("in IVector::createVector: 0 dimension", RESULT_CODE::WRONG_DIM);
         }
         return nullptr;
     }
 
     if (pData == nullptr) {
        if (pLogger != nullptr) {
-           pLogger->log("IVector::createVector: null param", RESULT_CODE::BAD_REFERENCE);
+           pLogger->log("in IVector::createVector: null param", RESULT_CODE::BAD_REFERENCE);
        }
        return nullptr;
+    }
+
+    for (size_t i = 0; i < dim; ++i) {
+        if (std::isnan(pData[i])) {
+            if (pLogger != nullptr) {
+                pLogger->log("in IVector::createVector: nan in data", RESULT_CODE::NAN_VALUE);
+            }
+            return nullptr;
+        }
     }
 
     // placement new
@@ -111,7 +120,7 @@ IVector* IVector::createVector(size_t dim, double* pData, ILogger* pLogger) {
 
     if (buff == nullptr) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::createVector: could not create buffer", RESULT_CODE::OUT_OF_MEMORY);
+            pLogger->log("in IVector::createVector: could not create buffer", RESULT_CODE::OUT_OF_MEMORY);
         }
         return nullptr;
     }
@@ -125,14 +134,14 @@ IVector* IVector::createVector(size_t dim, double* pData, ILogger* pLogger) {
 IVector* IVector::add(IVector const* pOperand1, IVector const* pOperand2, ILogger* pLogger) {
     if (pOperand1 == nullptr || pOperand2 == nullptr) {
        if (pLogger != nullptr) {
-           pLogger->log("IVector::add: nullptr", RESULT_CODE::BAD_REFERENCE);
+           pLogger->log("in IVector::add: nullptr", RESULT_CODE::BAD_REFERENCE);
        }
        return nullptr;
     }
 
     if (pOperand1->getDim() != pOperand2->getDim()) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::add: unequal dimensions", RESULT_CODE::WRONG_DIM);
+            pLogger->log("in IVector::add: unequal dimensions", RESULT_CODE::WRONG_DIM);
         }
         return nullptr;
     }
@@ -141,7 +150,7 @@ IVector* IVector::add(IVector const* pOperand1, IVector const* pOperand2, ILogge
 
     if (res == nullptr) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::add: nullptr", RESULT_CODE::BAD_REFERENCE);
+            pLogger->log("in IVector::add: nullptr", RESULT_CODE::BAD_REFERENCE);
         }
         return nullptr;
     }
@@ -161,14 +170,14 @@ IVector* IVector::add(IVector const* pOperand1, IVector const* pOperand2, ILogge
 IVector* IVector::sub(IVector const* pOperand1, IVector const* pOperand2, ILogger* pLogger) {
     if (pOperand1 == nullptr || pOperand2 == nullptr) {
        if (pLogger != nullptr) {
-           pLogger->log("IVector::sub: nullptr", RESULT_CODE::BAD_REFERENCE);
+           pLogger->log("in IVector::sub: nullptr", RESULT_CODE::BAD_REFERENCE);
        }
        return nullptr;
     }
 
     if (pOperand1->getDim() != pOperand2->getDim()) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::sub: unequal dimensions", RESULT_CODE::WRONG_DIM);
+            pLogger->log("in IVector::sub: unequal dimensions", RESULT_CODE::WRONG_DIM);
         }
         return nullptr;
     }
@@ -177,7 +186,7 @@ IVector* IVector::sub(IVector const* pOperand1, IVector const* pOperand2, ILogge
 
     if (res == nullptr) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::sub: nullptr", RESULT_CODE::BAD_REFERENCE);
+            pLogger->log("in IVector::sub: nullptr", RESULT_CODE::BAD_REFERENCE);
         }
         return nullptr;
     }
@@ -197,14 +206,14 @@ IVector* IVector::sub(IVector const* pOperand1, IVector const* pOperand2, ILogge
 IVector* IVector::mul(IVector const* pOperand1, double scaleParam, ILogger* pLogger) {
     if (pOperand1 == nullptr) {
        if (pLogger != nullptr) {
-           pLogger->log("IVector::mul: nullptr", RESULT_CODE::BAD_REFERENCE);
+           pLogger->log("in IVector::mul: nullptr", RESULT_CODE::BAD_REFERENCE);
        }
        return nullptr;
     }
 
     if (std::isnan(scaleParam)) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::mul: scaleParam is not a number", RESULT_CODE::WRONG_DIM);
+            pLogger->log("in IVector::mul: scaleParam is not a number", RESULT_CODE::WRONG_DIM);
         }
         return nullptr;
     }
@@ -213,7 +222,7 @@ IVector* IVector::mul(IVector const* pOperand1, double scaleParam, ILogger* pLog
 
     if (res == nullptr) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::mul: nullptr", RESULT_CODE::BAD_REFERENCE);
+            pLogger->log("in IVector::mul: nullptr", RESULT_CODE::BAD_REFERENCE);
         }
         return nullptr;
     }
@@ -233,14 +242,14 @@ IVector* IVector::mul(IVector const* pOperand1, double scaleParam, ILogger* pLog
 double IVector::mul(IVector const* pOperand1, IVector const* pOperand2, ILogger* pLogger) {
     if (pOperand1 == nullptr || pOperand2 == nullptr) {
        if (pLogger != nullptr) {
-           pLogger->log("IVector::mul: nullptr", RESULT_CODE::BAD_REFERENCE);
+           pLogger->log("in IVector::mul: nullptr", RESULT_CODE::BAD_REFERENCE);
        }
        return std::numeric_limits<double>::quiet_NaN();
     }
 
     if (pOperand1->getDim() != pOperand2->getDim()) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::mul: unequal dimensions", RESULT_CODE::WRONG_DIM);
+            pLogger->log("in IVector::mul: unequal dimensions", RESULT_CODE::WRONG_DIM);
         }
         return std::numeric_limits<double>::quiet_NaN();
     }
@@ -259,14 +268,14 @@ double IVector::mul(IVector const* pOperand1, IVector const* pOperand2, ILogger*
 RESULT_CODE IVector::equals(IVector const* pOperand1, IVector const* pOperand2, NORM norm, double tolerance, bool* result, ILogger* pLogger) {
     if (std::isnan(tolerance)) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::equals: tolerance is not a number", RESULT_CODE::NAN_VALUE);
+            pLogger->log("in IVector::equals: tolerance is not a number", RESULT_CODE::NAN_VALUE);
         }
         return RESULT_CODE::NAN_VALUE;
     }
 
     if (pOperand1 == nullptr || pOperand2 == nullptr) {
        if (pLogger != nullptr) {
-           pLogger->log("IVector::equals: nullptr", RESULT_CODE::BAD_REFERENCE);
+           pLogger->log("in IVector::equals: nullptr", RESULT_CODE::BAD_REFERENCE);
        }
        return RESULT_CODE::BAD_REFERENCE;
     }
@@ -274,7 +283,7 @@ RESULT_CODE IVector::equals(IVector const* pOperand1, IVector const* pOperand2, 
     if (pOperand1->getDim() != pOperand2->getDim())
     {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::equals: unequal dimensions", RESULT_CODE::WRONG_DIM);
+            pLogger->log("in IVector::equals: unequal dimensions", RESULT_CODE::WRONG_DIM);
         }
         return RESULT_CODE::WRONG_DIM;
     }
@@ -283,7 +292,7 @@ RESULT_CODE IVector::equals(IVector const* pOperand1, IVector const* pOperand2, 
 
     if (diff == nullptr) {
         if (pLogger != nullptr) {
-            pLogger->log("IVector::equals: nullptr", RESULT_CODE::BAD_REFERENCE);
+            pLogger->log("in IVector::equals: nullptr", RESULT_CODE::BAD_REFERENCE);
         }
         return RESULT_CODE::BAD_REFERENCE;
     }

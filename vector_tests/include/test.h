@@ -15,21 +15,9 @@ void test( std::string const &testName, bool (*f)(args...), args... arg )
     std::cout << testName << ": " << (res ? "PASSED" : "FAILED") << std::endl;
 }
 
-template<class T>
-void print(FILE* stream, T* collection) {
-    assert(collection);
-
-    if (!stream) { stream = stdout; }
-
-    size_t dim = collection->getDim();
-    fprintf(stream, "[");
-    if (dim) {
-        fprintf(stream, "%lf", collection->getCoord(0));
-        for (size_t i = 1; i < dim; ++i) {
-            fprintf(stream, " %lf", collection->getCoord(i));
-        }
-    }
-    fprintf(stream, "]\n");
+template <class T>
+bool isBad(T* entity) {
+    return entity == nullptr;
 }
 
 #endif // TEST_H

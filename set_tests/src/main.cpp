@@ -62,40 +62,44 @@ array<double, DIMENSION>
 ILogger *pLogger = ILogger::createLogger(CLIENT(CLIENT_KEY));
 
 static void print(FILE* stream, IVector* vec) {
-    assert(vec);
-
     if (!stream) { stream = stdout; }
 
-    size_t dim = vec->getDim();
-    fprintf(stream, "[");
-    if (dim) {
-        fprintf(stream, "%lf", vec->getCoord(0));
-        for (size_t i = 1; i < dim; ++i) {
-            fprintf(stream, " %lf", vec->getCoord(i));
+    if (!vec) {
+        fprintf(stream, "nullptr\n");
+    } else {
+        size_t dim = vec->getDim();
+        fprintf(stream, "[");
+        if (dim) {
+            fprintf(stream, "%lf", vec->getCoord(0));
+            for (size_t i = 1; i < dim; ++i) {
+                fprintf(stream, " %lf", vec->getCoord(i));
+            }
         }
+        fprintf(stream, "]\n");
     }
-    fprintf(stream, "]\n");
 }
 
 static void print(FILE* stream, ISet* set) {
-    assert(set);
-
     if (!stream) { stream = stdout; }
 
-    size_t size = set->getSize();
-    IVector* vec;
+    if (!set) {
+        fprintf(stream, "nullptr\n");
+    } else {
+        size_t size = set->getSize();
+        IVector* vec;
 
-    fprintf(stream, "{\n");
-    for (size_t i = 0; i < size; ++i) {
-        fprintf(stream, "\t");
-        if (set->get(vec, i) == RESULT_CODE::SUCCESS) {
-            print(stream, vec);
-            delete vec;
-        } else {
-            fprintf(stream, "[]\n");
+        fprintf(stream, "{\n");
+        for (size_t i = 0; i < size; ++i) {
+            fprintf(stream, "\t");
+            if (set->get(vec, i) == RESULT_CODE::SUCCESS) {
+                print(stream, vec);
+                delete vec;
+            } else {
+                fprintf(stream, "[]\n");
+            }
         }
+        fprintf(stream, "     }\n");
     }
-    fprintf(stream, "     }\n");
 }
 
 static void printHead(ISet* s1, ISet* s2) {
@@ -164,11 +168,6 @@ static bool checkSet(ISet* set, array<double, DIMENSION>* data) {
     return true;
 }
 
-template <class T>
-bool isBadCollection(T* collection) {
-    return collection == nullptr;
-}
-
 bool isEmpty(size_t size) {
     return size == 0;
 }
@@ -193,9 +192,9 @@ static void testSum(ISet* s1, ISet* s2, ILogger* pLogger) {
         delete goodSum_s1;
     }
 
-    test("Sum with nan tolerance", isBadCollection<ISet>, badSum_nan);
-    test("Sum of set and null", isBadCollection<ISet>, badSum_nullptr_right);
-    test("Sum of null and set", isBadCollection<ISet>, badSum_nullptr_left);
+    test("Sum with nan tolerance", isBad<ISet>, badSum_nan);
+    test("Sum of set and null", isBad<ISet>, badSum_nullptr_right);
+    test("Sum of null and set", isBad<ISet>, badSum_nullptr_left);
 }
 
 static void testIntersect(ISet* s1, ISet* s2, ILogger* pLogger) {
@@ -218,9 +217,9 @@ static void testIntersect(ISet* s1, ISet* s2, ILogger* pLogger) {
         delete goodIntersect_s1;
     }
 
-    test("Difference with nan tolerance", isBadCollection<ISet>, badIntersect_nan);
-    test("Difference of set and null", isBadCollection<ISet>, badIntersect_nullptr_right);
-    test("Difference of null and set", isBadCollection<ISet>, badIntersect_nullptr_left);
+    test("Difference with nan tolerance", isBad<ISet>, badIntersect_nan);
+    test("Difference of set and null", isBad<ISet>, badIntersect_nullptr_right);
+    test("Difference of null and set", isBad<ISet>, badIntersect_nullptr_left);
 }
 
 static void testDiff(ISet* s1, ISet* s2, ILogger* pLogger) {
@@ -243,9 +242,9 @@ static void testDiff(ISet* s1, ISet* s2, ILogger* pLogger) {
         delete goodDiff_empty;
     }
 
-    test("Difference with nan tolerance", isBadCollection<ISet>, badDiff_nan);
-    test("Difference of set and null", isBadCollection<ISet>, badDiff_nullptr_right);
-    test("Difference of null and set", isBadCollection<ISet>, badDiff_nullptr_left);
+    test("Difference with nan tolerance", isBad<ISet>, badDiff_nan);
+    test("Difference of set and null", isBad<ISet>, badDiff_nullptr_right);
+    test("Difference of null and set", isBad<ISet>, badDiff_nullptr_left);
 }
 
 static void testSymDiff(ISet* s1, ISet* s2, ILogger* pLogger) {
@@ -268,9 +267,9 @@ static void testSymDiff(ISet* s1, ISet* s2, ILogger* pLogger) {
         delete goodSymDiff_empty;
     }
 
-    test("Sym difference with nan tolerance", isBadCollection<ISet>, badSymDiff_nan);
-    test("Sym difference of set and null", isBadCollection<ISet>, badSymDiff_nullptr_right);
-    test("Sym difference of null and set", isBadCollection<ISet>, badSymDiff_nullptr_left);
+    test("Sym difference with nan tolerance", isBad<ISet>, badSymDiff_nan);
+    test("Sym difference of set and null", isBad<ISet>, badSymDiff_nullptr_right);
+    test("Sym difference of null and set", isBad<ISet>, badSymDiff_nullptr_left);
 }
 
 static bool isTrue(bool expression) {

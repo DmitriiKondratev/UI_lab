@@ -17,6 +17,7 @@ using namespace std;
 double
         coords1[]   = {1., 2., 3., 4.},
         coords2[]   = {5., 6., 7., 8.},
+        coords_nan[]   = {5., NAN, 7., 8.},
         scaleParam  = 5;
 
 double
@@ -25,20 +26,38 @@ double
         etalonMul_VD[]  = {5., 10., 15., 20.},
         etalonMul_VV    = 70.,
         etalonNorm_1    = 10.,
-        etalonNorm_2    = std::sqrt(30.),
+        etalonNorm_2    = sqrt(30.),
         etalonNorm_inf  = 4.;
 
 ILogger *pLogger = ILogger::createLogger(CLIENT(CLIENT_KEY));
+
+static void print(FILE* stream, IVector* vec) {
+    if (!stream) { stream = stdout; }
+
+    if (!vec) {
+        fprintf(stream, "nullptr\n");
+    } else {
+        size_t dim = vec->getDim();
+        fprintf(stream, "[");
+        if (dim) {
+            fprintf(stream, "%lf", vec->getCoord(0));
+            for (size_t i = 1; i < dim; ++i) {
+                fprintf(stream, " %lf", vec->getCoord(i));
+            }
+        }
+        fprintf(stream, "]\n");
+    }
+}
 
 static void printHead(IVector* v1, IVector* v2) {
     cout << "Tests for vector library:" << endl;
 
     if (v1 && v2) {
         cout << "v1 = ";
-        print<IVector>(nullptr, v1);
+        print(nullptr, v1);
 
         cout << "v2 = ";
-        print<IVector>(nullptr, v2);
+        print(nullptr, v2);
     } else {
         cout << "v1 and v2 are bad" << endl;
     }
@@ -56,10 +75,6 @@ static bool checkVector(IVector* vec, double* arr) {
     }
 
     return true;
-}
-
-static bool isBadVector(IVector* vec) {
-    return vec == nullptr;
 }
 
 static bool checkNum(double res, double num) {
@@ -86,9 +101,9 @@ static void testSum(IVector* v1, IVector* v2, IVector* vecOtherDim, ILogger* pLo
         // goodSum->~IVector();
     }
 
-    test("Sum of incompatible vec", isBadVector, badSum_otherDim);
-    test("Sum of vec and null", isBadVector, badSum_nullptr_right);
-    test("Sum of null and vec", isBadVector, badSum_nullptr_left);
+    test("Sum of incompatible vec", isBad<IVector>, badSum_otherDim);
+    test("Sum of vec and null", isBad<IVector>, badSum_nullptr_right);
+    test("Sum of null and vec", isBad<IVector>, badSum_nullptr_left);
 }
 
 static void testDiff(IVector* v1, IVector* v2, IVector* vecOtherDim, ILogger* pLogger) {
@@ -105,9 +120,9 @@ static void testDiff(IVector* v1, IVector* v2, IVector* vecOtherDim, ILogger* pL
         // delete goodDiff;
     }
 
-    test("Diff of incompatible vec", isBadVector, badDiff_otherDim);
-    test("Diff of vec and null", isBadVector, badDiff_nullptr_right);
-    test("Diff of null and vec", isBadVector, badDiff_nullptr_left);
+    test("Diff of incompatible vec", isBad<IVector>, badDiff_otherDim);
+    test("Diff of vec and null", isBad<IVector>, badDiff_nullptr_right);
+    test("Diff of null and vec", isBad<IVector>, badDiff_nullptr_left);
 }
 
 static void testMul(IVector* v, ILogger* pLogger) {
@@ -123,8 +138,8 @@ static void testMul(IVector* v, ILogger* pLogger) {
         // delete goodMul;
     }
 
-    test("Product of vector by nan", isBadVector, badMul_nan);
-    test("Product of null by number", isBadVector, badMul_nullptr);
+    test("Product of vector by nan", isBad<IVector>, badMul_nan);
+    test("Product of null by number", isBad<IVector>, badMul_nullptr);
 }
 
 static void testMul(IVector* v1, IVector* v2, IVector* vecOtherDim, ILogger* pLogger) {
@@ -183,7 +198,9 @@ int main() {
     IVector
             *vec3dim = IVector::createVector(3, coords1, pLogger),
             *v1 = IVector::createVector(4, coords1, pLogger),
-            *v2 = IVector::createVector(4, coords2, pLogger);
+            *v2 = IVector::createVector(4, coords2, pLogger),
+            *v_nan = IVector::createVector(4, coords_nan, nullptr);
+
 
     printHead(v1, v2);
 
@@ -207,11 +224,15 @@ int main() {
         }
     }
 
+    print(nullptr, v_nan);
+    test("Creation with nan data", isBad<IVector>, v_nan);
+
     std::cout << endl << (allPassed ? "ALL TESTS PASSED" : "TESTS FAILED") << endl;
 
     if (v1) { delete v1; }
     if (v2) { delete v2; }
     if (vec3dim) { delete vec3dim; }
+    if (v_nan) { delete vec3dim; }
 
     pLogger->destroyLogger(CLIENT(CLIENT_KEY));
 

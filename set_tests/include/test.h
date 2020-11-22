@@ -15,4 +15,9 @@ void test( std::string const &testName, bool (*f)(args...), args... arg )
     std::cout << testName << ": " << (res ? "PASSED" : "FAILED") << std::endl;
 }
 
+template <class T>
+bool isBad(T* entity) {
+    return entity == nullptr;
+}
+
 #endif // TEST_H
