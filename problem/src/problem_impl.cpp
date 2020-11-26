@@ -7,6 +7,10 @@
 #define DIM 2
 
 namespace {
+    static double func(double x, double y, double a, double b) {
+        return a * (x - 2.0) * (x - 2.0) + b * y * y + 2.0;
+    }
+
     class ProblemImpl : public IProblem {
     private:
         const size_t argsDim, paramsDim;
@@ -42,8 +46,9 @@ namespace {
             double x = args->getCoord(0);
             double y = args->getCoord(1);
             double a = params->getCoord(0);
+            double b = params->getCoord(1);
 
-            res = y - x * x + a;
+            res = func(x, y, a, b);
             return RESULT_CODE::SUCCESS;
         }
 
@@ -102,28 +107,7 @@ namespace {
                 return false;
             }
 
-            auto
-                    begin = compact->getBegin(),
-                    end = compact->getEnd();
-
-            bool res = false;
-            if (begin && end) {
-                double a = params->getCoord(0);
-
-                double xBeg = begin->getCoord(0);
-                double yBeg = begin->getCoord(1);
-
-                double xEnd = end->getCoord(0);
-                double yEnd = end->getCoord(1);
-
-                double tmp = (yBeg - xBeg * xBeg + a) * (yEnd - xEnd * xEnd + a);
-                res = tmp < 0 || std::abs(tmp) < 1e-6;
-            }
-
-            delete begin;
-            delete end;
-
-            return res;
+            return true;
         }
     };
 

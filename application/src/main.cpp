@@ -130,8 +130,8 @@ int main(int argc, char *argv[]) {
     }
 
     #ifndef USERS_LIBS
-        data[0] = 10;
-        data[1] = 100;
+        data[0] = 1;
+        data[1] = 1;
     #else
         std::cout << "Input problem params vector, separated by space or enter: ";
         for (size_t i = 0; i < dim; i++) {
@@ -184,8 +184,8 @@ int main(int argc, char *argv[]) {
     }
 
     #ifndef USERS_LIBS
-        data[0] = 0.01;
-        data[1] = 0.02;
+        data[0] = 0.001;
+        data[1] = 0.001;
     #else
         std::cout << "Input solver params vector, separated by space or enter: ";
         for (size_t i = 0; i < dim; i++) {
@@ -238,8 +238,8 @@ int main(int argc, char *argv[]) {
     auto beg = IVector::createVector(dim, data, logger);
 
     #ifndef USERS_LIBS
-        data[0] = 5;
-        data[1] = 4;
+        data[0] = 4;
+        data[1] = 3;
     #else
         std::cout << "end vector:\n";
         for (size_t i = 0; i < dim; i++) {
