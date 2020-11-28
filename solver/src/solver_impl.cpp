@@ -69,7 +69,6 @@ namespace {
                 const QString   step        = "step";
                 const QRegExp   strFlag     = QRegExp("\\s");
                 const int       paramsCount = 2;
-                const int       dummy       = 0; // for better padding!
             } grammar;
 
             auto splitStr = str.split(grammar.paramSeparator, Qt::SplitBehaviorFlags::SkipEmptyParts);
